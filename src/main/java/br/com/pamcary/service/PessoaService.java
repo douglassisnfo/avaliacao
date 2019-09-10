@@ -19,6 +19,6 @@ public interface PessoaService {
 	
 	public List<Pessoa> listPessoa();
 	
-	public Optional<Pessoa> findByCpf();
+	public Optional<Pessoa> findByCpf(String cpf);
 	
 }

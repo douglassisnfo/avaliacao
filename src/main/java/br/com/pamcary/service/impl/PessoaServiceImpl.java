@@ -42,14 +42,12 @@ public class PessoaServiceImpl implements PessoaService{
 
 	@Override
 	public List<Pessoa> listPessoa() {
-		// TODO Auto-generated method stub
-		return null;
+		return pessoaRepository.findAll();
 	}
 
 	@Override
-	public Optional<Pessoa> findByCpf() {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<Pessoa> findByCpf(String cpf) {
+		return pessoaRepository.findByCpf(cpf);
 	}
 
 }

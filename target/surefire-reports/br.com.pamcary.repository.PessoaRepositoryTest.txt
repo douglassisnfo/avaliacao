@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: br.com.pamcary.repository.PessoaRepositoryTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.6 s - in br.com.pamcary.repository.PessoaRepositoryTest
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.613 s - in br.com.pamcary.repository.PessoaRepositoryTest
