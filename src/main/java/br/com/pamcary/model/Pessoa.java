@@ -6,14 +6,14 @@
 package br.com.pamcary.model;
 
 import java.time.LocalDate;
-import java.util.UUID;
-import javax.persistence.Column;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.Size;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.GenericGenerator;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import br.com.pamcary.validacao.CPFCNPFJ;
@@ -26,30 +26,25 @@ import br.com.pamcary.validacao.CPFCNPFJ;
 public class Pessoa {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
-    @Column(updatable = false, nullable = false)
-    @ColumnDefault("random_uuid()")
-    private UUID codigo;
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pessoa_sequence")
+    @SequenceGenerator(name="pessoa_sequence", sequenceName="sequence_pessoa_fisica")
+    private int codigo;
     
     @Size(min=10, max=60)
     private String nome;
 
-    @CPFCNPFJ
     @Size(min = 11, max = 14)
+    @CPFCNPFJ
     private String cpf;
     
-    @DateTimeFormat(pattern = "yyyy/MM/dd")
+    @DateTimeFormat(pattern = "yyyy/MM/dd hh:mm:ss")
     private LocalDate dataNascimento;
 
-    public UUID getCodigo() {
+    public int  getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(UUID codigo) {
+    public void setCodigo(int  codigo) {
         this.codigo = codigo;
     }
 
