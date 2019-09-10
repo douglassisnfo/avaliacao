@@ -52,7 +52,7 @@ public class PessoaRepositoryTest {
 		String cpf = "14762218049";
 		String nome = "Antonio Souza";
 		Optional<Pessoa> optPessoa = pessoaRepository.findByCpf(cpf);
-		
+
 		assertThat(optPessoa.get().getNome())
 	      .isEqualTo(nome);
 	}

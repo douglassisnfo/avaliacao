@@ -26,13 +26,17 @@ public class PessoaServiceImpl implements PessoaService{
 
 	@Override
 	public Pessoa updatePessoa(Pessoa pessoa) {
-		// TODO Auto-generated method stub
-		return null;
+		pessoaRepository.save(pessoa);
+		return pessoa;
 	}
 
 	@Override
-	public boolean deletePessoa(Pessoa pessoa) {
-		// TODO Auto-generated method stub
+	public boolean deletePessoa(Integer codigo) {
+                Optional<Pessoa> optPessoa = pessoaRepository.findById(codigo);
+                if(optPessoa.isPresent()){
+                    pessoaRepository.delete(optPessoa.get());
+                    return true;
+                }
 		return false;
 	}
 

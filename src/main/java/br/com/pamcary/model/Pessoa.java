@@ -28,7 +28,7 @@ public class Pessoa {
     @Id
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="pessoa_sequence")
     @SequenceGenerator(name="pessoa_sequence", sequenceName="sequence_pessoa_fisica")
-    private int codigo;
+    private Integer codigo;
     
     @Size(min=10, max=60)
     private String nome;
@@ -40,11 +40,11 @@ public class Pessoa {
     @DateTimeFormat(pattern = "yyyy/MM/dd hh:mm:ss")
     private LocalDate dataNascimento;
 
-    public int  getCodigo() {
+    public Integer  getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(int  codigo) {
+    public void setCodigo(Integer  codigo) {
         this.codigo = codigo;
     }
 

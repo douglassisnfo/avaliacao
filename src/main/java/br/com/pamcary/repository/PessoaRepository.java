@@ -11,7 +11,7 @@ import br.com.pamcary.model.Pessoa;
 *
 * @author DOUGLAS
 */
-public interface PessoaRepository extends JpaRepository<Pessoa, UUID> {
+public interface PessoaRepository extends JpaRepository<Pessoa, Integer> {
 	
 	public Optional<Pessoa> findByCpf(String cpf);
 

@@ -17,6 +17,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import br.com.pamcary.model.Pessoa;
 import br.com.pamcary.repository.PessoaRepository;
 import br.com.pamcary.service.impl.PessoaServiceImpl;
+import java.util.Optional;
+import org.junit.Assert;
 
 /**
 *
@@ -48,18 +50,29 @@ public class PessoaSeviceTest {
 		return pessoa;
 	}
 	
-	
 	@Before
 	public void setUp() {
 		Pessoa pSave = pessoaBuider();
 		Mockito.when(pessoaRepository.save(pSave)).thenReturn(pSave);
+                
+                Optional<Pessoa> optPessoa = Optional.of(pessoaBuider());
+                Mockito.when(pessoaRepository.findById(1)).thenReturn(optPessoa);
 	}
-	
 	
 	@Test
 	public void whenSavePessoa() {
 		String nome = "Antonio Souza";
 		Pessoa pessoa = pessoaService.savePessoa(pessoaBuider());
 		assertThat(pessoa.getNome()).isEqualTo(nome);
+	}
+        
+        @Test
+	public void whenDeletePessoa() {
+            Assert.assertTrue(pessoaService.deletePessoa(1));
+	}
+        
+        @Test
+	public void whenDeletePessoaNotFound() {
+            Assert.assertFalse(pessoaService.deletePessoa(3));
 	}
 }

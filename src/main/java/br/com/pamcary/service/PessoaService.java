@@ -15,7 +15,7 @@ public interface PessoaService {
 	
 	public Pessoa updatePessoa(Pessoa pessoa);
 	
-	public boolean deletePessoa(Pessoa pessoa);
+	public boolean deletePessoa(Integer codigo);
 	
 	public List<Pessoa> listPessoa();
 	
