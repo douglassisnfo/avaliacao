@@ -17,6 +17,7 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import br.com.pamcary.validacao.CPFCNPFJ;
+import javax.validation.constraints.Past;
 
 /**
  *
@@ -37,6 +38,7 @@ public class Pessoa {
     @CPFCNPFJ
     private String cpf;
     
+    @Past
     @DateTimeFormat(pattern = "yyyy/MM/dd hh:mm:ss")
     private LocalDate dataNascimento;
 
