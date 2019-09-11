@@ -17,6 +17,7 @@ import javax.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import br.com.pamcary.validacao.CPFCNPFJ;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import javax.validation.constraints.Past;
 
 /**
@@ -39,7 +40,8 @@ public class Pessoa {
     private String cpf;
     
     @Past
-    @DateTimeFormat(pattern = "yyyy/MM/dd hh:mm:ss")
+    //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDate dataNascimento;
 
     public Integer  getCodigo() {

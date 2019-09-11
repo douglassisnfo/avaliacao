@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import br.com.pamcary.model.Pessoa;
 import br.com.pamcary.repository.PessoaRepository;
 import br.com.pamcary.service.PessoaService;
+import br.com.pamcary.validacao.CPFCNPJValidator;
 
 /**
 *
@@ -47,7 +48,11 @@ public class PessoaServiceImpl implements PessoaService{
 
 	@Override
 	public Optional<Pessoa> findByCpf(String cpf) {
-		return pessoaRepository.findByCpf(cpf);
+            CPFCNPJValidator cpfcnpjv = new CPFCNPJValidator();
+            if(cpfcnpjv.isValid(cpf, null)){
+                return pessoaRepository.findByCpf(cpf);
+            }
+            return Optional.empty();
 	}
 
 }
