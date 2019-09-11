@@ -57,8 +57,8 @@ public class PessoaController {
         return null;
     }
 
-    @DeleteMapping
-    public ResponseEntity deletePessoa(Integer codigo) {
+    @DeleteMapping(value = "/{codigo}")
+    public ResponseEntity deletePessoa(@PathVariable Integer codigo) {
         if (pessoaService.deletePessoa(codigo)) {
             return ResponseEntity.status(HttpStatus.OK).build();
         }

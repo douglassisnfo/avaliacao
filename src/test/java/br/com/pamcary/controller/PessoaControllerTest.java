@@ -7,7 +7,6 @@ package br.com.pamcary.controller;
 
 import br.com.pamcary.model.Pessoa;
 import br.com.pamcary.service.PessoaService;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static org.hamcrest.CoreMatchers.equalTo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -71,6 +69,10 @@ public class PessoaControllerTest {
        
        Optional<Pessoa> optPessoa = Optional.of(pessoaBuider());
        given(pessoaService.findByCpf(pessoaBuider().getCpf())).willReturn(optPessoa);
+       
+       given(pessoaService.deletePessoa(pessoaBuider().getCodigo())).willReturn(true);
+       
+       given(pessoaService.deletePessoa(pessoaBuider().getCodigo()+1)).willReturn(false);
     }
     
     private String savePessoa = "{\n" +
@@ -147,6 +149,30 @@ public class PessoaControllerTest {
         String url = "/pessoa/000.622.180-49";
         try {
             this.mvc.perform(get(url))
+                    .andExpect(status().isNotFound())
+                    .andReturn();
+        } catch (Exception ex) {
+            Logger.getLogger(PessoaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Test
+    public void whenDeletePessoa(){
+        String url = "/pessoa/" + pessoaBuider().getCodigo();
+        try {
+            this.mvc.perform(delete(url))
+                    .andExpect(status().isOk())
+                    .andReturn();
+        } catch (Exception ex) {
+            Logger.getLogger(PessoaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Test
+    public void whenDeletePessoaNotFound(){
+        String url = "/pessoa/" + pessoaBuider().getCodigo() + 1;
+        try {
+            this.mvc.perform(delete(url))
                     .andExpect(status().isNotFound())
                     .andReturn();
         } catch (Exception ex) {
