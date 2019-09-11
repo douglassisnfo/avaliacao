@@ -14,10 +14,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import br.com.pamcary.dto.PessoaSaveDto;
 import br.com.pamcary.model.Pessoa;
 import br.com.pamcary.repository.PessoaRepository;
 import br.com.pamcary.service.impl.PessoaServiceImpl;
-import com.sun.source.tree.AssertTree;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +50,16 @@ public class PessoaSeviceTest {
 	@MockBean
     private PessoaRepository pessoaRepository;
 	
+	private PessoaSaveDto pessoaBuiderSave() {
+		PessoaSaveDto pessoa = new PessoaSaveDto();
+		pessoa.setCpf("14762218049");
+		pessoa.setNome("Antonio Souza");
+		pessoa.setDataNascimento(LocalDateTime.now());
+		return pessoa;
+	}
+	
 	private Pessoa pessoaBuider() {
 		Pessoa pessoa = new Pessoa();
-		pessoa.setCodigo(1);
 		pessoa.setCpf("14762218049");
 		pessoa.setNome("Antonio Souza");
 		pessoa.setDataNascimento(LocalDateTime.now());
@@ -79,7 +86,7 @@ public class PessoaSeviceTest {
 	@Test
 	public void whenSavePessoa() {
 		String nome = "Antonio Souza";
-		Pessoa pessoa = pessoaService.savePessoa(pessoaBuider());
+		Pessoa pessoa = pessoaService.savePessoa(pessoaBuiderSave());
 		assertThat(pessoa.getNome()).isEqualTo(nome);
 	}
         

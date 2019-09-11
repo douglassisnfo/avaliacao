@@ -16,8 +16,8 @@ CREATE SEQUENCE sequence_pessoa_fisica
     NO CACHE
 ;
 
-insert into PESSO_FISICA values (sequence_pessoa_fisica.NEXTVAL, 'João da Silva', '38545517842', '2018-12-28 02:00:21');
-insert into PESSO_FISICA values (sequence_pessoa_fisica.NEXTVAL, 'Fernando Cardoso', '12354469875', '2018-12-28 02:00:21');
-insert into PESSO_FISICA values (sequence_pessoa_fisica.NEXTVAL, 'Gustavo Santos', '54213325687', '2018-12-28 02:00:21');
-insert into PESSO_FISICA values (sequence_pessoa_fisica.NEXTVAL, 'Guilherme Bezerra', '53254463100', '2018-12-28 02:00:21');
-insert into PESSO_FISICA values (sequence_pessoa_fisica.NEXTVAL, 'Antonio Silveira', '45233365248', '2018-12-28 02:00:21');
+insert into PESSO_FISICA values (sequence_pessoa_fisica.NEXTVAL, 'João da Silva', '46692593859', '2018-12-28 02:00:21');
+insert into PESSO_FISICA values (sequence_pessoa_fisica.NEXTVAL, 'Fernando Cardoso', '77934503881', '2018-12-28 02:00:21');
+insert into PESSO_FISICA values (sequence_pessoa_fisica.NEXTVAL, 'Gustavo Santos', '02534948857', '2018-12-28 02:00:21');
+insert into PESSO_FISICA values (sequence_pessoa_fisica.NEXTVAL, 'Guilherme Bezerra', '19375670872', '2018-12-28 02:00:21');
+insert into PESSO_FISICA values (sequence_pessoa_fisica.NEXTVAL, 'Antonio Silveira', '39512532824', '2018-12-28 02:00:21');

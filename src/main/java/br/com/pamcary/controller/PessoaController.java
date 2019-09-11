@@ -1,10 +1,13 @@
 package br.com.pamcary.controller;
 
+import br.com.pamcary.dto.PessoaSaveDto;
+import br.com.pamcary.dto.PessoaUpdateDto;
 import br.com.pamcary.model.Pessoa;
 import br.com.pamcary.service.PessoaService;
 import java.util.List;
 import java.util.Optional;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -31,7 +34,7 @@ public class PessoaController {
     MessageSource messageSource;
 
     private String errorFields(BindingResult bindingResult) {
-        String messages = "Inválid Fields \n";
+        String messages = "Invalid Fields \n";
         messages += bindingResult.getAllErrors().stream().filter((object) -> (object instanceof FieldError))
                 .map((object) -> (FieldError) object).map((fieldError)
                 -> fieldError.getField() + " - " + messageSource.getMessage(fieldError, null) + "\n")
@@ -40,21 +43,34 @@ public class PessoaController {
     }
 
     @PostMapping
-    public ResponseEntity savePessoa(@Valid @RequestBody Pessoa pessoa, BindingResult bindingResult) {
+    public ResponseEntity savePessoa(@Valid @RequestBody PessoaSaveDto pessoaSaveDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorFields(bindingResult));
+        }
+        
+        Pessoa pessoa = pessoaService.savePessoa(pessoaSaveDto);
+        if(pessoa == null) {
+        	return ResponseEntity
+            .status(HttpStatus.CONFLICT).build();
         }
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(pessoaService.savePessoa(pessoa));
+                .body(pessoa);
     }
 
-    @PutMapping
-    public ResponseEntity updatePessoa(@Valid @RequestBody Pessoa pessoa, BindingResult bindingResult) {
+    @PutMapping(value = "/{codigo}")
+    public ResponseEntity updatePessoa(@Valid @PathVariable @Min(1) Integer codigo, @Valid @RequestBody PessoaUpdateDto pessoaUpdateDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorFields(bindingResult));
         }
-        return null;
+        
+        Pessoa newPessoa = pessoaService.updatePessoa(codigo, pessoaUpdateDto);
+        if(newPessoa == null){
+            return ResponseEntity.notFound().build();
+        }
+         return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(newPessoa);
     }
 
     @DeleteMapping(value = "/{codigo}")

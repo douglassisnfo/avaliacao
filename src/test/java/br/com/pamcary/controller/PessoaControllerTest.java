@@ -5,6 +5,8 @@
  */
 package br.com.pamcary.controller;
 
+import br.com.pamcary.dto.PessoaSaveDto;
+import br.com.pamcary.dto.PessoaUpdateDto;
 import br.com.pamcary.model.Pessoa;
 import br.com.pamcary.service.PessoaService;
 import java.time.LocalDateTime;
@@ -24,10 +26,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -58,11 +62,25 @@ public class PessoaControllerTest {
         return pessoa;
     }
     
+    private PessoaSaveDto pessoaBuiderSave() {
+		PessoaSaveDto pessoa = new PessoaSaveDto();
+		pessoa.setCpf("14762218049");
+		pessoa.setNome("Antonio Souza");
+		pessoa.setDataNascimento(LocalDateTime.now());
+		return pessoa;
+	}
+    
+    private PessoaUpdateDto pessoaBuiderUpdate() {
+    	PessoaUpdateDto pessoa = new PessoaUpdateDto();
+		pessoa.setNome("Douglas Marques");
+		return pessoa;
+	}
+    
     private List<Pessoa> listPessoa = new ArrayList<>();
         
     @Before
     public void setUp() {
-        given(pessoaService.savePessoa(pessoaBuider())).willReturn(pessoaBuider());
+        given(pessoaService.savePessoa(pessoaBuiderSave())).willReturn(pessoaBuider());
         
        listPessoa.add(pessoaBuider());
        given(pessoaService.listPessoa()).willReturn(listPessoa);
@@ -73,10 +91,13 @@ public class PessoaControllerTest {
        given(pessoaService.deletePessoa(pessoaBuider().getCodigo())).willReturn(true);
        
        given(pessoaService.deletePessoa(pessoaBuider().getCodigo()+1)).willReturn(false);
+       
+       Pessoa newPessoa = pessoaBuider();
+       newPessoa.setNome(pessoaBuiderUpdate().getNome());
+       given(pessoaService.updatePessoa(pessoaBuider().getCodigo(), pessoaBuiderUpdate())).willReturn(newPessoa);
     }
     
     private String savePessoa = "{\n" +
-"	\"codigo\":1,\n" +
 "	\"nome\":\"Antonio Souza\",\n" +
 "	\"cpf\":\"147.622.180-49\",\n" +
 "	\"dataNascimento\":\"2019-09-09 22:20:00\"\n" +
@@ -173,6 +194,41 @@ public class PessoaControllerTest {
         String url = "/pessoa/" + pessoaBuider().getCodigo() + 1;
         try {
             this.mvc.perform(delete(url))
+                    .andExpect(status().isNotFound())
+                    .andReturn();
+        } catch (Exception ex) {
+            Logger.getLogger(PessoaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    @Test
+    public void whenUpdatePessoa(){
+        String url = "/pessoa/" + pessoaBuider().getCodigo();
+        
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
+                .put(url)
+                .contentType(MediaType.APPLICATION_JSON_UTF8).content(savePessoa);   
+        try {
+            this.mvc.perform(builder)
+                    .andExpect(status().isOk())
+                    .andReturn();
+        } catch (Exception ex) {
+            Logger.getLogger(PessoaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    @Test
+    public void whenUpdatePessoaNotFound(){
+        
+        given(pessoaService.updatePessoa(1,pessoaBuiderUpdate())).willReturn(null);
+        
+        String url = "/pessoa/" + pessoaBuider().getCodigo();
+        MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
+                .put(url)
+                .contentType(MediaType.APPLICATION_JSON_UTF8).content(savePessoa);
+        try {
+            this.mvc.perform(builder)
                     .andExpect(status().isNotFound())
                     .andReturn();
         } catch (Exception ex) {

@@ -72,7 +72,12 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>2.9.2</version>
 		</dependency>
-
+	 <dependency>
+	  <groupId>org.springframework</groupId>
+	  <artifactId>spring-context</artifactId>
+	  <version>5.1.9.RELEASE</version>
+	  <type>jar</type>
+	 </dependency>
 	</dependencies>
 
 	<build>
