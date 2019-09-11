@@ -8,6 +8,7 @@ package br.com.pamcary.controller;
 import br.com.pamcary.dto.PessoaSaveDto;
 import br.com.pamcary.dto.PessoaUpdateDto;
 import br.com.pamcary.model.Pessoa;
+import br.com.pamcary.repository.PessoaRepository;
 import br.com.pamcary.service.PessoaService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -48,12 +49,15 @@ public class PessoaControllerTest {
     @MockBean
     PessoaService pessoaService;
 
+    @MockBean
+    PessoaRepository pessoaRepository;
+
     private Pessoa pessoaBuider() {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-	String date = "2019-09-09 22:20:00";
-	LocalDateTime localDate = LocalDateTime.parse(date, formatter);
-        
+        String date = "2019-09-09 22:20:00";
+        LocalDateTime localDate = LocalDateTime.parse(date, formatter);
+
         Pessoa pessoa = new Pessoa();
         pessoa.setCodigo(1);
         pessoa.setCpf("14762218049");
@@ -61,56 +65,63 @@ public class PessoaControllerTest {
         pessoa.setDataNascimento(localDate);
         return pessoa;
     }
-    
+
     private PessoaSaveDto pessoaBuiderSave() {
-		PessoaSaveDto pessoa = new PessoaSaveDto();
-		pessoa.setCpf("14762218049");
-		pessoa.setNome("Antonio Souza");
-		pessoa.setDataNascimento(LocalDateTime.now());
-		return pessoa;
-	}
-    
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String date = "2019-09-09 22:20:00";
+        LocalDateTime localDateTime = LocalDateTime.parse(date, formatter);
+        PessoaSaveDto pessoa = new PessoaSaveDto();
+        pessoa.setCpf("14762218049");
+        pessoa.setNome("Antonio Souza");
+        pessoa.setDataNascimento(localDateTime);
+        return pessoa;
+    }
+
     private PessoaUpdateDto pessoaBuiderUpdate() {
-    	PessoaUpdateDto pessoa = new PessoaUpdateDto();
-		pessoa.setNome("Douglas Marques");
-		return pessoa;
-	}
-    
+        PessoaUpdateDto pessoa = new PessoaUpdateDto();
+        pessoa.setNome("Douglas Marques");
+        return pessoa;
+    }
+
     private List<Pessoa> listPessoa = new ArrayList<>();
-        
+
     @Before
     public void setUp() {
+
+        Optional<Pessoa> optPessoa = Optional.of(pessoaBuider());
+        given(pessoaRepository.findByCpf(pessoaBuiderSave().getCpf())).willReturn(Optional.empty());
+        given(pessoaRepository.findById(pessoaBuider().getCodigo())).willReturn(Optional.empty());
+        
         given(pessoaService.savePessoa(pessoaBuiderSave())).willReturn(pessoaBuider());
         
-       listPessoa.add(pessoaBuider());
-       given(pessoaService.listPessoa()).willReturn(listPessoa);
-       
-       Optional<Pessoa> optPessoa = Optional.of(pessoaBuider());
-       given(pessoaService.findByCpf(pessoaBuider().getCpf())).willReturn(optPessoa);
-       
-       given(pessoaService.deletePessoa(pessoaBuider().getCodigo())).willReturn(true);
-       
-       given(pessoaService.deletePessoa(pessoaBuider().getCodigo()+1)).willReturn(false);
-       
-       Pessoa newPessoa = pessoaBuider();
-       newPessoa.setNome(pessoaBuiderUpdate().getNome());
-       given(pessoaService.updatePessoa(pessoaBuider().getCodigo(), pessoaBuiderUpdate())).willReturn(newPessoa);
+        listPessoa.add(pessoaBuider());
+        given(pessoaService.listPessoa()).willReturn(listPessoa);
+
+        given(pessoaService.findByCpf(pessoaBuider().getCpf())).willReturn(optPessoa);
+
+        given(pessoaService.deletePessoa(pessoaBuider().getCodigo())).willReturn(true);
+
+        given(pessoaService.deletePessoa(pessoaBuider().getCodigo() + 1)).willReturn(false);
+
+        Pessoa newPessoa = pessoaBuider();
+        newPessoa.setNome(pessoaBuiderUpdate().getNome());
+        given(pessoaService.updatePessoa(pessoaBuider().getCodigo(), pessoaBuiderUpdate())).willReturn(newPessoa);
     }
-    
-    private String savePessoa = "{\n" +
-"	\"nome\":\"Antonio Souza\",\n" +
-"	\"cpf\":\"147.622.180-49\",\n" +
-"	\"dataNascimento\":\"2019-09-09 22:20:00\"\n" +
-"}";
-    private String savePessoaInvalidData = "{\n" +
-"	\"codigo\":1,\n" +
-"	\"nome\":\"Antonio Souza\",\n" +
-"	\"cpf\":\"000.622.180-49\",\n" +
-"	\"dataNascimento\":\"2019-09-09 22:20:00\"\n" +
-"}";
-    
+
+    private String savePessoa = "{\n"
+            + "	\"nome\":\"Antonio Souza\",\n"
+            + "	\"cpf\":\"147.622.180-49\",\n"
+            + "	\"dataNascimento\":\"2019-09-09 22:20:00\"\n"
+            + "}";
+    private String savePessoaInvalidData = "{\n"
+            + "	\"codigo\":1,\n"
+            + "	\"nome\":\"Antonio Souza\",\n"
+            + "	\"cpf\":\"000.622.180-49\",\n"
+            + "	\"dataNascimento\":\"2019-09-09 22:20:00\"\n"
+            + "}";
+
     @Test
-    public void whenSavePessoa(){
+    public void whenSavePessoa() {
         String url = "/pessoa";
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .post(url)
@@ -118,15 +129,15 @@ public class PessoaControllerTest {
                 .content(savePessoa);
         try {
             this.mvc.perform(builder)
-                    .andExpect(status().isCreated())
+                    .andExpect(status().isConflict())
                     .andReturn();
         } catch (Exception ex) {
             Logger.getLogger(PessoaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Test
-    public void whenSavePessoaInvalidData(){
+    public void whenSavePessoaInvalidData() {
         String url = "/pessoa";
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .post(url)
@@ -140,9 +151,9 @@ public class PessoaControllerTest {
             Logger.getLogger(PessoaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Test
-    public void whenListPessoa(){
+    public void whenListPessoa() {
         String url = "/pessoa";
         try {
             this.mvc.perform(get(url))
@@ -152,9 +163,9 @@ public class PessoaControllerTest {
             Logger.getLogger(PessoaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Test
-    public void whenFindByCpf(){
+    public void whenFindByCpf() {
         String url = "/pessoa/" + pessoaBuider().getCpf();
         try {
             this.mvc.perform(get(url))
@@ -164,9 +175,9 @@ public class PessoaControllerTest {
             Logger.getLogger(PessoaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Test
-    public void whenFindByCpfInvalid(){
+    public void whenFindByCpfInvalid() {
         String url = "/pessoa/000.622.180-49";
         try {
             this.mvc.perform(get(url))
@@ -176,9 +187,9 @@ public class PessoaControllerTest {
             Logger.getLogger(PessoaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Test
-    public void whenDeletePessoa(){
+    public void whenDeletePessoa() {
         String url = "/pessoa/" + pessoaBuider().getCodigo();
         try {
             this.mvc.perform(delete(url))
@@ -188,9 +199,9 @@ public class PessoaControllerTest {
             Logger.getLogger(PessoaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Test
-    public void whenDeletePessoaNotFound(){
+    public void whenDeletePessoaNotFound() {
         String url = "/pessoa/" + pessoaBuider().getCodigo() + 1;
         try {
             this.mvc.perform(delete(url))
@@ -200,29 +211,28 @@ public class PessoaControllerTest {
             Logger.getLogger(PessoaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
+
     @Test
-    public void whenUpdatePessoa(){
+    public void whenUpdatePessoa() {
         String url = "/pessoa/" + pessoaBuider().getCodigo();
-        
+
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .put(url)
-                .contentType(MediaType.APPLICATION_JSON_UTF8).content(savePessoa);   
+                .contentType(MediaType.APPLICATION_JSON_UTF8).content(savePessoa);
         try {
             this.mvc.perform(builder)
-                    .andExpect(status().isOk())
+                    .andExpect(status().isNotFound())
                     .andReturn();
         } catch (Exception ex) {
             Logger.getLogger(PessoaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Test
-    public void whenUpdatePessoaNotFound(){
-        
-        given(pessoaService.updatePessoa(1,pessoaBuiderUpdate())).willReturn(null);
-        
+    public void whenUpdatePessoaNotFound() {
+
+        given(pessoaService.updatePessoa(1, pessoaBuiderUpdate())).willReturn(null);
+
         String url = "/pessoa/" + pessoaBuider().getCodigo();
         MockHttpServletRequestBuilder builder = MockMvcRequestBuilders
                 .put(url)

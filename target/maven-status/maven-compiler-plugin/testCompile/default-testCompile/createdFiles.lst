@@ -1,0 +1,5 @@
+br\com\pamcary\service\PessoaSeviceTest.class
+br\com\pamcary\repository\PessoaRepositoryTest.class
+br\com\pamcary\AvaliacaoApplicationTests.class
+br\com\pamcary\controller\PessoaControllerTest.class
+br\com\pamcary\service\PessoaSeviceTest$PessoaSeviceTestContextConfiguration.class

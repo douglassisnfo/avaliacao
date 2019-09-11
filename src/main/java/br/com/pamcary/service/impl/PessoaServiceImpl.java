@@ -42,8 +42,8 @@ public class PessoaServiceImpl implements PessoaService{
 	@Override
 	public Pessoa savePessoa(PessoaSaveDto pessoaSaveDto) {
 		Pessoa pessoa = pessoaBuiderSave(pessoaSaveDto);
-		
-		if(!pessoaRepository.findByCpf(pessoa.getCpf()).isPresent()) {
+		Optional<Pessoa> optPessoa = pessoaRepository.findByCpf(pessoa.getCpf());
+		if(!optPessoa.isPresent()) {
 			pessoaRepository.save(pessoa);
 			return pessoa;
 		}

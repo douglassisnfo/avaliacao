@@ -1,0 +1,10 @@
+br\com\pamcary\validacao\CPFCNPJValidator.class
+br\com\pamcary\dto\PessoaUpdateDto.class
+br\com\pamcary\controller\PessoaController.class
+br\com\pamcary\repository\PessoaRepository.class
+br\com\pamcary\AvaliacaoApplication.class
+br\com\pamcary\dto\PessoaSaveDto.class
+br\com\pamcary\validacao\CPFCNPFJ.class
+br\com\pamcary\service\PessoaService.class
+br\com\pamcary\model\Pessoa.class
+br\com\pamcary\service\impl\PessoaServiceImpl.class
