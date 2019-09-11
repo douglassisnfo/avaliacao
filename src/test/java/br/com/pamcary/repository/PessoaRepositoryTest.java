@@ -15,6 +15,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import br.com.pamcary.model.Pessoa;
+import java.time.LocalDateTime;
 
 /**
 *
@@ -35,7 +36,7 @@ public class PessoaRepositoryTest {
 		
 		pessoa.setCpf("14762218049");
 		pessoa.setNome("Antonio Souza");
-		pessoa.setDataNascimento(LocalDate.now());
+		pessoa.setDataNascimento(LocalDateTime.now());
 		return pessoa;
 	}
 	

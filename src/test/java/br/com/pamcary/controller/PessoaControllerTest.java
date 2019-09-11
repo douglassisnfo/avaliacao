@@ -8,6 +8,10 @@ package br.com.pamcary.controller;
 import br.com.pamcary.model.Pessoa;
 import br.com.pamcary.service.PessoaService;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -23,6 +27,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,19 +46,28 @@ public class PessoaControllerTest {
     PessoaService pessoaService;
 
     private Pessoa pessoaBuider() {
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+	String date = "2019-09-09 22:20:00";
+	LocalDateTime localDate = LocalDateTime.parse(date, formatter);
+        
         Pessoa pessoa = new Pessoa();
         pessoa.setCodigo(1);
         pessoa.setCpf("14762218049");
         pessoa.setNome("Antonio Souza");
-        pessoa.setDataNascimento(LocalDate.now());
+        pessoa.setDataNascimento(localDate);
         return pessoa;
     }
+    
+    private List<Pessoa> listPessoa = new ArrayList<>();
+    
     
     @Before
     public void setUp() {
         given(pessoaService.savePessoa(pessoaBuider())).willReturn(pessoaBuider());
         
-       
+       listPessoa.add(pessoaBuider());
+       given(pessoaService.listPessoa()).willReturn(listPessoa);
     }
     
     private String savePessoa = "{\n" +
@@ -78,7 +92,7 @@ public class PessoaControllerTest {
                 .content(savePessoa);
         try {
             this.mvc.perform(builder)
-                    .andExpect(status().isOk())
+                    .andExpect(status().isCreated())
                     .andReturn();
         } catch (Exception ex) {
             Logger.getLogger(PessoaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
@@ -99,6 +113,19 @@ public class PessoaControllerTest {
         } catch (Exception ex) {
             Logger.getLogger(PessoaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
+    
+    @Test
+    public void whenListPessoa(){
+        String url = "/pessoa";
+        try {
+            this.mvc.perform(get(url))
+                    .andExpect(status().isOk())
+                    .andReturn();
+        } catch (Exception ex) {
+            Logger.getLogger(PessoaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
 }

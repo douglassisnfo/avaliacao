@@ -18,6 +18,7 @@ import br.com.pamcary.model.Pessoa;
 import br.com.pamcary.repository.PessoaRepository;
 import br.com.pamcary.service.impl.PessoaServiceImpl;
 import com.sun.source.tree.AssertTree;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +55,7 @@ public class PessoaSeviceTest {
 		pessoa.setCodigo(1);
 		pessoa.setCpf("14762218049");
 		pessoa.setNome("Antonio Souza");
-		pessoa.setDataNascimento(LocalDate.now());
+		pessoa.setDataNascimento(LocalDateTime.now());
 		return pessoa;
 	}
 	

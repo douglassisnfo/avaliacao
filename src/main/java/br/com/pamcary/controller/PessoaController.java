@@ -49,7 +49,7 @@ public class PessoaController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorFields(bindingResult));
         }
         return ResponseEntity
-                .status(HttpStatus.OK)
+                .status(HttpStatus.CREATED)
                 .body(pessoaService.savePessoa(pessoa));
     }
 
@@ -79,7 +79,7 @@ public class PessoaController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> findAll() {
+    public ResponseEntity listPessoa() {
         List<Pessoa> listPessoa = pessoaService.listPessoa();
         if (listPessoa.size() > 0) {
             return ResponseEntity.status(HttpStatus.OK).body(listPessoa);

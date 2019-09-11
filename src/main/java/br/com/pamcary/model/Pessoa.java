@@ -18,7 +18,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import br.com.pamcary.validacao.CPFCNPFJ;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
+import java.time.LocalDateTime;
 import javax.validation.constraints.Past;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 /**
  *
@@ -40,9 +44,8 @@ public class Pessoa {
     private String cpf;
     
     @Past
-    //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
-    private LocalDate dataNascimento;
+    private LocalDateTime dataNascimento;
 
     public Integer  getCodigo() {
         return codigo;
@@ -68,11 +71,11 @@ public class Pessoa {
         this.cpf = cpf;
     }
 
-    public LocalDate getDataNascimento() {
+    public LocalDateTime getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(LocalDate dataNascimento) {
+    public void setDataNascimento(LocalDateTime dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 }
