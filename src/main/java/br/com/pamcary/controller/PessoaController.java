@@ -2,12 +2,8 @@ package br.com.pamcary.controller;
 
 import br.com.pamcary.model.Pessoa;
 import br.com.pamcary.service.PessoaService;
-import ch.qos.logback.core.net.server.Client;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;

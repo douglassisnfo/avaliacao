@@ -5,7 +5,6 @@
  */
 package br.com.pamcary.model;
 
-import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,15 +13,10 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.validation.constraints.Size;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import br.com.pamcary.validacao.CPFCNPFJ;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import java.time.LocalDateTime;
 import javax.validation.constraints.Past;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 /**
  *

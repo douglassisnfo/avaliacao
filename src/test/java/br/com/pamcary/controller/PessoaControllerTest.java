@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -60,14 +61,16 @@ public class PessoaControllerTest {
     }
     
     private List<Pessoa> listPessoa = new ArrayList<>();
-    
-    
+        
     @Before
     public void setUp() {
         given(pessoaService.savePessoa(pessoaBuider())).willReturn(pessoaBuider());
         
        listPessoa.add(pessoaBuider());
        given(pessoaService.listPessoa()).willReturn(listPessoa);
+       
+       Optional<Pessoa> optPessoa = Optional.of(pessoaBuider());
+       given(pessoaService.findByCpf(pessoaBuider().getCpf())).willReturn(optPessoa);
     }
     
     private String savePessoa = "{\n" +
@@ -127,5 +130,27 @@ public class PessoaControllerTest {
         }
     }
     
+    @Test
+    public void whenFindByCpf(){
+        String url = "/pessoa/" + pessoaBuider().getCpf();
+        try {
+            this.mvc.perform(get(url))
+                    .andExpect(status().isOk())
+                    .andReturn();
+        } catch (Exception ex) {
+            Logger.getLogger(PessoaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
+    @Test
+    public void whenFindByCpfInvalid(){
+        String url = "/pessoa/000.622.180-49";
+        try {
+            this.mvc.perform(get(url))
+                    .andExpect(status().isNotFound())
+                    .andReturn();
+        } catch (Exception ex) {
+            Logger.getLogger(PessoaControllerTest.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
